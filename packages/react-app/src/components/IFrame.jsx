@@ -9,9 +9,13 @@ import { TransactionManager } from "../helpers/TransactionManager";
 
 const { confirm } = Modal;
 
-export default function IFrame({ address, userProvider, mainnetProvider }) {
+export default function IFrame({ address, userProvider }) {
   const cachedNetwork = window.localStorage.getItem("network");
-  const targetNetwork = NETWORKS[cachedNetwork || "ethereum"];
+  let targetNetwork = NETWORKS[cachedNetwork || "ethereum"];
+
+  if (!targetNetwork) {
+    targetNetwork = NETWORKS["ethereum"];
+  }
 
   const { setAddress, appUrl, setAppUrl, setRpcUrl, iframeRef, newTx } = useSafeInject();
 
@@ -48,7 +52,6 @@ export default function IFrame({ address, userProvider, mainnetProvider }) {
               method: "eth_sendTransaction",
               params: [tx],
             }}
-            provider={mainnetProvider}
             chainId={targetNetwork.chainId}
           />
         ),
